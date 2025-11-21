@@ -1,0 +1,5 @@
+{
+  "name": "Bind9 Simulator",
+  "description": "Интерактивный тренажёр конфигурации DNS сервера Bind9 с автоматической проверкой синтаксиса и пояснениями на базе AI.",
+  "requestFramePermissions": []
+}
