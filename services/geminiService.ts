@@ -1,5 +1,6 @@
 import { GoogleGenAI, Type, Schema } from "@google/genai";
-import { ValidationResult } from "../types";
+import { ValidationResult, Language } from "../types";
+import { LANGUAGES } from "../translations";
 
 const getAiClient = () => {
   const apiKey = process.env.API_KEY;
@@ -22,28 +23,30 @@ const validationSchema: Schema = {
         type: Type.OBJECT,
         properties: {
           line: { type: Type.INTEGER, description: "The line number where the error occurred." },
-          message: { type: Type.STRING, description: "A clear error message in Russian explaining the syntax error." },
+          message: { type: Type.STRING, description: "A clear error message in the requested language explaining the syntax error." },
           severity: { type: Type.STRING, enum: ["error", "warning"], description: "The severity of the issue." },
         },
         required: ["line", "message", "severity"]
       },
       description: "List of syntax errors found."
     },
-    generalFeedback: { type: Type.STRING, description: "A brief summary of the configuration status in Russian." }
+    generalFeedback: { type: Type.STRING, description: "A brief summary of the configuration status in the requested language." }
   },
   required: ["isValid", "errors", "generalFeedback"]
 };
 
-export const validateBindConfig = async (code: string, filename: string): Promise<ValidationResult> => {
+export const validateBindConfig = async (code: string, filename: string, lang: Language): Promise<ValidationResult> => {
   try {
     const ai = getAiClient();
+    const languageName = LANGUAGES[lang];
+    
     const prompt = `
-      Ты опытный системный администратор Linux и эксперт по DNS серверу BIND9.
-      Проверь следующий конфигурационный файл (${filename}) на наличие синтаксических и логических ошибок.
-      Строго придерживайся формата BIND9.
-      Ответь на РУССКОМ языке.
+      You are an experienced Linux system administrator and BIND9 DNS expert.
+      Check the following configuration file (${filename}) for syntax and logical errors.
+      Strictly follow BIND9 format.
+      Respond in ${languageName}.
       
-      Код для проверки:
+      Code to check:
       \`\`\`
       ${code}
       \`\`\`
@@ -55,7 +58,7 @@ export const validateBindConfig = async (code: string, filename: string): Promis
       config: {
         responseMimeType: "application/json",
         responseSchema: validationSchema,
-        temperature: 0.1 // Low temperature for precise validation
+        temperature: 0.1 
       },
     });
 
@@ -67,22 +70,24 @@ export const validateBindConfig = async (code: string, filename: string): Promis
     console.error("Validation Error:", error);
     return {
       isValid: false,
-      errors: [{ line: 0, message: "Ошибка соединения с AI сервисом проверки.", severity: "error" }],
-      generalFeedback: "Не удалось выполнить проверку."
+      errors: [{ line: 0, message: "Error connecting to AI service.", severity: "error" }],
+      generalFeedback: "Failed to execute validation."
     };
   }
 };
 
-export const explainBindConfig = async (code: string, filename: string): Promise<string> => {
+export const explainBindConfig = async (code: string, filename: string, lang: Language): Promise<string> => {
   try {
     const ai = getAiClient();
+    const languageName = LANGUAGES[lang];
+
     const prompt = `
-      Ты преподаватель сетевых технологий. Объясни простым и понятным языком на РУССКОМ, 
-      что делает этот конфигурационный файл BIND9 (${filename}).
-      Разбери ключевые директивы. Используй Markdown для форматирования.
-      Будь краток, но информативен.
+      You are a network technology teacher. Explain in simple and clear terms in ${languageName},
+      what this BIND9 configuration file (${filename}) does.
+      Analyze key directives. Use Markdown for formatting.
+      Be concise but informative.
       
-      Код:
+      Code:
       \`\`\`
       ${code}
       \`\`\`
@@ -93,9 +98,9 @@ export const explainBindConfig = async (code: string, filename: string): Promise
       contents: prompt,
     });
 
-    return response.text || "Не удалось получить объяснение.";
+    return response.text || "Failed to get explanation.";
   } catch (error) {
     console.error("Explanation Error:", error);
-    return "Произошла ошибка при попытке получить объяснение от AI.";
+    return "An error occurred while trying to get an explanation from AI.";
   }
 };

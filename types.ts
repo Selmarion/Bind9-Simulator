@@ -29,3 +29,5 @@ export interface AnalysisResult {
   data: string | ValidationResult;
   isLoading: boolean;
 }
+
+export type Language = 'en' | 'es' | 'ru' | 'de' | 'pl' | 'fr' | 'ua' | 'ja';

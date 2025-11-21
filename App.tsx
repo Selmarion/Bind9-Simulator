@@ -4,8 +4,9 @@ import { FileTabs } from './components/FileTabs';
 import { CodeEditor } from './components/CodeEditor';
 import { OutputConsole } from './components/OutputConsole';
 import { INITIAL_FILES, FILE_TEMPLATES } from './constants';
-import { ConfigType, FileConfig, AnalysisResult, ValidationResult } from './types';
+import { ConfigType, FileConfig, AnalysisResult, ValidationResult, Language } from './types';
 import { validateBindConfig, explainBindConfig } from './services/geminiService';
+import { TRANSLATIONS } from './translations';
 
 const App: React.FC = () => {
   // State for all files
@@ -14,6 +15,10 @@ const App: React.FC = () => {
   const [activeFileId, setActiveFileId] = useState<string>('named-conf-local');
   // State for AI analysis result
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
+  // State for Language
+  const [language, setLanguage] = useState<Language>('en');
+
+  const t = TRANSLATIONS[language];
 
   // Derived current file
   const currentFile = files[activeFileId];
@@ -37,7 +42,7 @@ const App: React.FC = () => {
       type: type,
       name: name,
       content: FILE_TEMPLATES[type],
-      description: type === ConfigType.NAMED_CONF ? 'Конфигурация сервера' : 'Файл зоны'
+      description: type === ConfigType.NAMED_CONF ? 'Configuration file' : 'Zone file'
     };
 
     setFiles(prev => ({ ...prev, [newId]: newFile }));
@@ -65,7 +70,7 @@ const App: React.FC = () => {
   const handleValidate = async () => {
     if (!currentFile) return;
     setAnalysisResult({ type: 'validation', data: {} as any, isLoading: true });
-    const result = await validateBindConfig(currentFile.content, currentFile.name);
+    const result = await validateBindConfig(currentFile.content, currentFile.name, language);
     setAnalysisResult({ type: 'validation', data: result, isLoading: false });
   };
 
@@ -73,7 +78,7 @@ const App: React.FC = () => {
   const handleExplain = async () => {
     if (!currentFile) return;
     setAnalysisResult({ type: 'explanation', data: "", isLoading: true });
-    const result = await explainBindConfig(currentFile.content, currentFile.name);
+    const result = await explainBindConfig(currentFile.content, currentFile.name, language);
     setAnalysisResult({ type: 'explanation', data: result, isLoading: false });
   };
 
@@ -83,12 +88,12 @@ const App: React.FC = () => {
     : [];
 
   if (!currentFile) {
-    return <div className="h-screen bg-slate-950 text-slate-400 flex items-center justify-center">Нет открытых файлов</div>;
+    return <div className="h-screen bg-slate-950 text-slate-400 flex items-center justify-center">{t.noFiles}</div>;
   }
 
   return (
     <div className="flex flex-col h-screen bg-slate-950 text-slate-200">
-      <Header activeFile={currentFile} />
+      <Header activeFile={currentFile} language={language} onLanguageChange={setLanguage} />
       
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar: File Navigation */}
@@ -98,6 +103,7 @@ const App: React.FC = () => {
           onFileChange={setActiveFileId}
           onAddFile={handleAddFile}
           onDeleteFile={handleDeleteFile}
+          language={language}
         />
 
         {/* Main Content Area */}
@@ -111,7 +117,7 @@ const App: React.FC = () => {
               className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-               Проверить синтаксис
+               {t.checkSyntax}
             </button>
             <button
               onClick={handleExplain}
@@ -119,10 +125,10 @@ const App: React.FC = () => {
               className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-              Объяснить код
+              {t.explainCode}
             </button>
             <div className="ml-auto text-xs text-slate-500 hidden xl:block">
-              Изменения сохраняются в памяти браузера на время сессии
+              {t.changesSaved}
             </div>
           </div>
 
@@ -131,7 +137,7 @@ const App: React.FC = () => {
             {/* Editor Section */}
             <div className="flex-1 flex flex-col border-r border-slate-800 min-h-[50%]">
                <div className="bg-slate-900/80 px-4 py-1 text-xs text-slate-500 border-b border-slate-800 uppercase tracking-wider flex justify-between">
-                  <span>Редактор</span>
+                  <span>{t.editor}</span>
                   <span>{currentFile.name}</span>
                </div>
                <CodeEditor 
@@ -144,10 +150,10 @@ const App: React.FC = () => {
             {/* Output Console Section */}
             <div className="lg:w-1/3 flex flex-col bg-slate-900 min-h-[30%] lg:min-h-full">
               <div className="bg-slate-800 px-4 py-2 text-xs text-slate-400 font-semibold border-b border-slate-700 uppercase tracking-wider shadow-sm z-10">
-                Результат анализа
+                {t.validationResults}
               </div>
               <div className="flex-1 overflow-hidden bg-slate-900">
-                 <OutputConsole result={analysisResult} />
+                 <OutputConsole result={analysisResult} language={language} />
               </div>
             </div>
           </div>

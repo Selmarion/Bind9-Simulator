@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { ConfigType, FileConfig } from '../types';
+import { ConfigType, FileConfig, Language } from '../types';
+import { TRANSLATIONS } from '../translations';
 
 interface FileTabsProps {
   files: Record<string, FileConfig>;
@@ -7,9 +8,11 @@ interface FileTabsProps {
   onFileChange: (id: string) => void;
   onAddFile: (name: string, type: ConfigType) => void;
   onDeleteFile: (id: string) => void;
+  language: Language;
 }
 
-export const FileTabs: React.FC<FileTabsProps> = ({ files, activeFileId, onFileChange, onAddFile, onDeleteFile }) => {
+export const FileTabs: React.FC<FileTabsProps> = ({ files, activeFileId, onFileChange, onAddFile, onDeleteFile, language }) => {
+  const t = TRANSLATIONS[language];
   const [isCreating, setIsCreating] = useState(false);
   const [newName, setNewName] = useState('');
   const [newType, setNewType] = useState<ConfigType>(ConfigType.NAMED_CONF);
@@ -27,13 +30,12 @@ export const FileTabs: React.FC<FileTabsProps> = ({ files, activeFileId, onFileC
   const handleDeleteClick = (e: React.MouseEvent, id: string) => {
     e.stopPropagation(); // Prevent activating the file when deleting
     
-    // Use window.alert/confirm explicitly
     if (Object.keys(files).length <= 1) {
-      window.alert("Нельзя удалить единственный файл.");
+      window.alert(t.deleteLastFile);
       return;
     }
     
-    if (window.confirm("Вы уверены, что хотите удалить этот файл? Это действие нельзя отменить.")) {
+    if (window.confirm(t.deleteConfirm)) {
       onDeleteFile(id);
     }
   };
@@ -43,11 +45,11 @@ export const FileTabs: React.FC<FileTabsProps> = ({ files, activeFileId, onFileC
       {/* Header & Actions */}
       <div className="p-4 border-b border-slate-800">
         <div className="flex justify-between items-center mb-2">
-          <span className="text-slate-400 text-xs uppercase font-semibold tracking-wider">Файлы</span>
+          <span className="text-slate-400 text-xs uppercase font-semibold tracking-wider">{t.files}</span>
           <button 
             onClick={() => setIsCreating(!isCreating)}
             className={`p-1 rounded transition-colors ${isCreating ? 'bg-red-500/20 text-red-400' : 'bg-indigo-600/20 text-indigo-400 hover:bg-indigo-600/40'}`}
-            title={isCreating ? "Отмена" : "Создать файл"}
+            title={isCreating ? t.cancel : t.createFile}
           >
             {isCreating ? (
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -61,26 +63,26 @@ export const FileTabs: React.FC<FileTabsProps> = ({ files, activeFileId, onFileC
         {isCreating && (
           <form onSubmit={handleCreateSubmit} className="bg-slate-950/50 p-3 rounded border border-slate-700/50 space-y-2 animate-in slide-in-from-top-2 fade-in duration-200">
             <div>
-              <label className="block text-[10px] text-slate-500 mb-1">Имя файла</label>
+              <label className="block text-[10px] text-slate-500 mb-1">{t.fileName}</label>
               <input 
                 type="text" 
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
-                placeholder="напр. db.internal"
+                placeholder="db.internal"
                 className="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs text-slate-200 focus:border-indigo-500 focus:outline-none"
                 autoFocus
               />
             </div>
             <div>
-              <label className="block text-[10px] text-slate-500 mb-1">Тип конфигурации</label>
+              <label className="block text-[10px] text-slate-500 mb-1">{t.configType}</label>
               <select 
                 value={newType}
                 onChange={(e) => setNewType(e.target.value as ConfigType)}
                 className="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs text-slate-200 focus:border-indigo-500 focus:outline-none"
               >
                 <option value={ConfigType.NAMED_CONF}>named.conf</option>
-                <option value={ConfigType.FORWARD_ZONE}>Прямая зона</option>
-                <option value={ConfigType.REVERSE_ZONE}>Обратная зона</option>
+                <option value={ConfigType.FORWARD_ZONE}>{t.files} (Forward)</option>
+                <option value={ConfigType.REVERSE_ZONE}>{t.files} (Reverse)</option>
               </select>
             </div>
             <button 
@@ -88,7 +90,7 @@ export const FileTabs: React.FC<FileTabsProps> = ({ files, activeFileId, onFileC
               disabled={!newName.trim()}
               className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs py-1.5 rounded transition-colors mt-1"
             >
-              Создать
+              {t.create}
             </button>
           </form>
         )}
@@ -121,11 +123,11 @@ export const FileTabs: React.FC<FileTabsProps> = ({ files, activeFileId, onFileC
               <div className="text-[10px] opacity-50 mt-1 leading-none font-sans truncate" title={file.description}>{file.description}</div>
             </div>
 
-            {/* Delete Button - Always visible, no opacity trick */}
+            {/* Delete Button */}
             <button
               onClick={(e) => handleDeleteClick(e, file.id)}
               className="p-1.5 text-slate-600 hover:bg-red-500/20 hover:text-red-400 rounded transition-all flex-shrink-0"
-              title="Удалить файл"
+              title={t.deleteConfirm}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
             </button>
@@ -134,9 +136,9 @@ export const FileTabs: React.FC<FileTabsProps> = ({ files, activeFileId, onFileC
       </div>
 
       <div className="p-4 border-t border-slate-800">
-         <div className="text-xs text-slate-500 mb-2">Инфо:</div>
+         <div className="text-xs text-slate-500 mb-2">{t.infoTitle}</div>
          <p className="text-xs text-slate-400 leading-relaxed">
-           Вы можете добавлять и удалять файлы для моделирования сложных конфигураций Bind9.
+           {t.infoText}
          </p>
       </div>
     </div>

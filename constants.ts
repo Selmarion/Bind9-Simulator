@@ -5,7 +5,7 @@ export const INITIAL_FILES: Record<string, FileConfig> = {
     id: 'named-conf-local',
     type: ConfigType.NAMED_CONF,
     name: 'named.conf.local',
-    description: 'Основной конфигурационный файл зон',
+    description: 'Main zone configuration file',
     content: `//
 // named.conf.local
 //
@@ -24,7 +24,7 @@ zone "1.168.192.in-addr.arpa" {
     id: 'db-forward',
     type: ConfigType.FORWARD_ZONE,
     name: 'db.example.com',
-    description: 'Файл зоны прямого просмотра',
+    description: 'Forward lookup zone file',
     content: `;
 ; BIND data file for example.com
 ;
@@ -45,7 +45,7 @@ www     IN      CNAME   example.com.`
     id: 'db-reverse',
     type: ConfigType.REVERSE_ZONE,
     name: 'db.192.168.1',
-    description: 'Файл зоны обратного просмотра',
+    description: 'Reverse lookup zone file',
     content: `;
 ; BIND reverse data file for local loopback interface
 ;
@@ -64,12 +64,12 @@ $TTL    604800
 };
 
 export const FILE_TEMPLATES: Record<ConfigType, string> = {
-  [ConfigType.NAMED_CONF]: `// Новый файл конфигурации
+  [ConfigType.NAMED_CONF]: `// New configuration file
 zone "new.zone" {
     type master;
     file "/etc/bind/db.new";
 };`,
-  [ConfigType.FORWARD_ZONE]: `; Файл прямой зоны
+  [ConfigType.FORWARD_ZONE]: `; Forward zone file
 $TTL    604800
 @       IN      SOA     ns1.example.com. admin.example.com. (
                               1         ; Serial
@@ -80,7 +80,7 @@ $TTL    604800
 ;
 @       IN      NS      ns1.example.com.
 @       IN      A       127.0.0.1`,
-  [ConfigType.REVERSE_ZONE]: `; Файл обратной зоны
+  [ConfigType.REVERSE_ZONE]: `; Reverse zone file
 $TTL    604800
 @       IN      SOA     ns1.example.com. admin.example.com. (
                               1         ; Serial
@@ -93,4 +93,4 @@ $TTL    604800
 1       IN      PTR     ns1.example.com.`
 };
 
-export const MOCK_GEMINI_RESPONSE_VALID = `{"isValid": true, "errors": [], "generalFeedback": "Конфигурация выглядит корректной."}`;
+export const MOCK_GEMINI_RESPONSE_VALID = `{"isValid": true, "errors": [], "generalFeedback": "Configuration looks correct."}`;
