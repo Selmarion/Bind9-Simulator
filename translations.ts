@@ -40,7 +40,12 @@ export const TRANSLATIONS = {
     loading: "Analyzing...",
     placeholderEmpty: "Click 'Check Syntax' or 'Explain Code' to get results.",
     connectionError: "Error connecting to AI service.",
-    parseError: "Failed to parse response."
+    parseError: "Failed to parse response.",
+    nslookupTitle: "Nslookup Simulator",
+    nslookupPlaceholder: "Enter arguments (e.g., example.com or -type=MX example.com)",
+    runCommand: "Run Command",
+    commandOutput: "Terminal Output",
+    close: "Close"
   },
   es: {
     appTitle: "Simulador Bind9",
@@ -70,7 +75,12 @@ export const TRANSLATIONS = {
     loading: "Analizando...",
     placeholderEmpty: "Haga clic en 'Verificar' o 'Explicar' para ver resultados.",
     connectionError: "Error de conexión con el servicio de IA.",
-    parseError: "Error al procesar la respuesta."
+    parseError: "Error al procesar la respuesta.",
+    nslookupTitle: "Simulador Nslookup",
+    nslookupPlaceholder: "Argumentos (ej. example.com o -type=MX example.com)",
+    runCommand: "Ejecutar",
+    commandOutput: "Salida de Terminal",
+    close: "Cerrar"
   },
   ru: {
     appTitle: "Bind9 Simulator",
@@ -100,7 +110,12 @@ export const TRANSLATIONS = {
     loading: "Анализ конфигурации...",
     placeholderEmpty: "Нажмите 'Проверить' или 'Объяснить', чтобы получить результат.",
     connectionError: "Ошибка соединения с AI сервисом.",
-    parseError: "Не удалось обработать ответ."
+    parseError: "Не удалось обработать ответ.",
+    nslookupTitle: "Симулятор Nslookup",
+    nslookupPlaceholder: "Аргументы (например, example.com или -type=MX example.com)",
+    runCommand: "Выполнить",
+    commandOutput: "Вывод терминала",
+    close: "Закрыть"
   },
   de: {
     appTitle: "Bind9 Simulator",
@@ -130,7 +145,12 @@ export const TRANSLATIONS = {
     loading: "Analysiere...",
     placeholderEmpty: "Klicken Sie auf 'Prüfen' oder 'Erklären', um Ergebnisse zu erhalten.",
     connectionError: "Verbindungsfehler zum KI-Dienst.",
-    parseError: "Antwort konnte nicht verarbeitet werden."
+    parseError: "Antwort konnte nicht verarbeitet werden.",
+    nslookupTitle: "Nslookup Simulator",
+    nslookupPlaceholder: "Argumente (z.B. example.com oder -type=MX example.com)",
+    runCommand: "Ausführen",
+    commandOutput: "Terminal-Ausgabe",
+    close: "Schließen"
   },
   pl: {
     appTitle: "Symulator Bind9",
@@ -160,7 +180,12 @@ export const TRANSLATIONS = {
     loading: "Analizowanie...",
     placeholderEmpty: "Kliknij 'Sprawdź' lub 'Wyjaśnij', aby uzyskać wyniki.",
     connectionError: "Błąd połączenia z usługą AI.",
-    parseError: "Nie udało się przetworzyć odpowiedzi."
+    parseError: "Nie udało się przetworzyć odpowiedzi.",
+    nslookupTitle: "Symulator Nslookup",
+    nslookupPlaceholder: "Argumenty (np. example.com lub -type=MX example.com)",
+    runCommand: "Uruchom",
+    commandOutput: "Wyjście terminala",
+    close: "Zamknij"
   },
   fr: {
     appTitle: "Simulateur Bind9",
@@ -190,7 +215,12 @@ export const TRANSLATIONS = {
     loading: "Analyse...",
     placeholderEmpty: "Cliquez sur 'Vérifier' ou 'Expliquer' pour voir les résultats.",
     connectionError: "Erreur de connexion au service IA.",
-    parseError: "Échec du traitement de la réponse."
+    parseError: "Échec du traitement de la réponse.",
+    nslookupTitle: "Simulateur Nslookup",
+    nslookupPlaceholder: "Arguments (ex: example.com ou -type=MX example.com)",
+    runCommand: "Exécuter",
+    commandOutput: "Sortie Terminal",
+    close: "Fermer"
   },
   ua: {
     appTitle: "Bind9 Simulator",
@@ -220,7 +250,12 @@ export const TRANSLATIONS = {
     loading: "Аналіз конфігурації...",
     placeholderEmpty: "Натисніть 'Перевірити' або 'Пояснити', щоб отримати результат.",
     connectionError: "Помилка з'єднання з AI сервісом.",
-    parseError: "Не вдалося обробити відповідь."
+    parseError: "Не вдалося обробити відповідь.",
+    nslookupTitle: "Симулятор Nslookup",
+    nslookupPlaceholder: "Аргументи (напр. example.com або -type=MX example.com)",
+    runCommand: "Виконати",
+    commandOutput: "Вивід терміналу",
+    close: "Закрити"
   },
   ja: {
     appTitle: "Bind9 シミュレーター",
@@ -250,6 +285,11 @@ export const TRANSLATIONS = {
     loading: "分析中...",
     placeholderEmpty: "「チェック」または「解説」をクリックして結果を表示します。",
     connectionError: "AIサービス接続エラー。",
-    parseError: "応答の解析に失敗しました。"
+    parseError: "応答の解析に失敗しました。",
+    nslookupTitle: "Nslookup シミュレーター",
+    nslookupPlaceholder: "引数 (例: example.com または -type=MX example.com)",
+    runCommand: "実行",
+    commandOutput: "ターミナル出力",
+    close: "閉じる"
   }
 };

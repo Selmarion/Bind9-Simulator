@@ -3,9 +3,10 @@ import { Header } from './components/Header';
 import { FileTabs } from './components/FileTabs';
 import { CodeEditor } from './components/CodeEditor';
 import { OutputConsole } from './components/OutputConsole';
+import { NslookupModal } from './components/NslookupModal';
 import { INITIAL_FILES, FILE_TEMPLATES } from './constants';
 import { ConfigType, FileConfig, AnalysisResult, ValidationResult, Language } from './types';
-import { validateBindConfig, explainBindConfig } from './services/geminiService';
+import { validateBindConfig, explainBindConfig, simulateNslookup } from './services/geminiService';
 import { TRANSLATIONS } from './translations';
 
 const App: React.FC = () => {
@@ -17,6 +18,11 @@ const App: React.FC = () => {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   // State for Language
   const [language, setLanguage] = useState<Language>('en');
+  
+  // Nslookup State
+  const [isNslookupOpen, setIsNslookupOpen] = useState(false);
+  const [nslookupLoading, setNslookupLoading] = useState(false);
+  const [nslookupResult, setNslookupResult] = useState<string | null>(null);
 
   const t = TRANSLATIONS[language];
 
@@ -82,6 +88,17 @@ const App: React.FC = () => {
     setAnalysisResult({ type: 'explanation', data: result, isLoading: false });
   };
 
+  // Handle Nslookup
+  const handleRunNslookup = async (args: string) => {
+    setNslookupLoading(true);
+    setNslookupResult(""); // Clear previous result while loading
+    
+    const result = await simulateNslookup(args, files, language);
+    
+    setNslookupResult(result);
+    setNslookupLoading(false);
+  };
+
   // Get errors for the current file to pass to editor
   const currentErrors = (analysisResult?.type === 'validation' && !analysisResult.isLoading)
     ? (analysisResult.data as ValidationResult).errors
@@ -111,6 +128,18 @@ const App: React.FC = () => {
           
           {/* Toolbar */}
           <div className="bg-slate-900/50 p-2 border-b border-slate-800 flex gap-2 items-center">
+            
+            {/* Nslookup Button (New) */}
+            <button
+              onClick={() => setIsNslookupOpen(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-md transition-colors mr-2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+              nslookup
+            </button>
+
+            <div className="h-6 w-px bg-slate-700 mx-1"></div>
+
             <button
               onClick={handleValidate}
               disabled={analysisResult?.isLoading}
@@ -157,9 +186,18 @@ const App: React.FC = () => {
               </div>
             </div>
           </div>
-
         </div>
       </div>
+
+      {/* Nslookup Modal */}
+      <NslookupModal 
+        isOpen={isNslookupOpen}
+        onClose={() => setIsNslookupOpen(false)}
+        onRun={handleRunNslookup}
+        isLoading={nslookupLoading}
+        result={nslookupResult}
+        language={language}
+      />
     </div>
   );
 };

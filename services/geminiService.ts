@@ -1,5 +1,5 @@
 import { GoogleGenAI, Type, Schema } from "@google/genai";
-import { ValidationResult, Language } from "../types";
+import { ValidationResult, Language, FileConfig } from "../types";
 import { LANGUAGES } from "../translations";
 
 const getAiClient = () => {
@@ -102,5 +102,57 @@ export const explainBindConfig = async (code: string, filename: string, lang: La
   } catch (error) {
     console.error("Explanation Error:", error);
     return "An error occurred while trying to get an explanation from AI.";
+  }
+};
+
+export const simulateNslookup = async (
+  commandArgs: string, 
+  files: Record<string, FileConfig>, 
+  lang: Language
+): Promise<string> => {
+  try {
+    const ai = getAiClient();
+    
+    // Combine all files into context
+    const filesContext = Object.values(files).map(f => `
+File: ${f.name} (${f.type})
+Content:
+\`\`\`
+${f.content}
+\`\`\`
+`).join('\n');
+
+    const prompt = `
+      You are a Linux DNS Server simulator.
+      Act exactly like the 'nslookup' command line tool.
+      
+      Context - Current BIND9 Configuration:
+      ${filesContext}
+      
+      Task:
+      User executes: nslookup ${commandArgs}
+      
+      Based *strictly* on the configuration files provided above, generate the output of this command.
+      
+      Rules:
+      1. If the record exists in the configuration, return the answer section.
+      2. If the zone or record does not exist, return standard NXDOMAIN or SERVFAIL error messages.
+      3. If the syntax of the config files is so broken that BIND wouldn't start, return a connection timed out or server failed error.
+      4. Output ONLY the text that would appear in the terminal. No markdown blocks, no explanations.
+      5. The output should look realistic (Server: 127.0.0.1, Address: 127.0.0.1#53, etc.).
+    `;
+
+    const response = await ai.models.generateContent({
+      model: MODEL_ID,
+      contents: prompt,
+      config: {
+        temperature: 0.1
+      }
+    });
+
+    return response.text || "Error: No output generated.";
+  } catch (error) {
+    console.error("Nslookup Error:", error);
+    return ";; Connection to server failed; no servers could be reached";
   }
 };
