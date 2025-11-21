@@ -1,8 +1,3 @@
-
-![alt text](image.png)
-![alt text](image-1.png)
-![alt text](image-2.png)
-
 # Run and deploy your App
 
 This contains everything you need to run your app locally.
@@ -16,3 +11,12 @@ This contains everything you need to run your app locally.
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. Run the app:
    `npm run dev`
+
+
+interface App
+![alt text](image.png)
+
+analises and corectomente errores:
+![alt text](image-1.png)
+![alt text](image-2.png)
+
