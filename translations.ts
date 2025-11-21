@@ -45,7 +45,16 @@ export const TRANSLATIONS = {
     nslookupPlaceholder: "Enter arguments (e.g., example.com or -type=MX example.com)",
     runCommand: "Run Command",
     commandOutput: "Terminal Output",
-    close: "Close"
+    close: "Close",
+    helpTitle: "Command Reference",
+    helpClickToUse: "Click to use",
+    helpDefault: "Standard Lookup (A)",
+    helpMX: "Mail Servers (MX)",
+    helpNS: "Name Servers (NS)",
+    helpSOA: "Start of Authority (SOA)",
+    helpTXT: "Text Records (TXT)",
+    helpReverse: "Reverse Lookup (PTR)",
+    helpDebug: "Debug Mode"
   },
   es: {
     appTitle: "Simulador Bind9",
@@ -80,7 +89,16 @@ export const TRANSLATIONS = {
     nslookupPlaceholder: "Argumentos (ej. example.com o -type=MX example.com)",
     runCommand: "Ejecutar",
     commandOutput: "Salida de Terminal",
-    close: "Cerrar"
+    close: "Cerrar",
+    helpTitle: "Referencia de Comandos",
+    helpClickToUse: "Clic para usar",
+    helpDefault: "Búsqueda estándar (A)",
+    helpMX: "Servidores de Correo (MX)",
+    helpNS: "Servidores de Nombres (NS)",
+    helpSOA: "Inicio de Autoridad (SOA)",
+    helpTXT: "Registros de Texto (TXT)",
+    helpReverse: "Búsqueda Inversa (PTR)",
+    helpDebug: "Modo Depuración"
   },
   ru: {
     appTitle: "Bind9 Simulator",
@@ -115,7 +133,16 @@ export const TRANSLATIONS = {
     nslookupPlaceholder: "Аргументы (например, example.com или -type=MX example.com)",
     runCommand: "Выполнить",
     commandOutput: "Вывод терминала",
-    close: "Закрыть"
+    close: "Закрыть",
+    helpTitle: "Справка по ключам",
+    helpClickToUse: "Нажмите, чтобы использовать",
+    helpDefault: "Стандартный запрос (A)",
+    helpMX: "Почтовые шлюзы (MX)",
+    helpNS: "DNS сервера (NS)",
+    helpSOA: "Начальная запись зоны (SOA)",
+    helpTXT: "Текстовые записи (TXT)",
+    helpReverse: "Обратный поиск (PTR)",
+    helpDebug: "Режим отладки"
   },
   de: {
     appTitle: "Bind9 Simulator",
@@ -150,7 +177,16 @@ export const TRANSLATIONS = {
     nslookupPlaceholder: "Argumente (z.B. example.com oder -type=MX example.com)",
     runCommand: "Ausführen",
     commandOutput: "Terminal-Ausgabe",
-    close: "Schließen"
+    close: "Schließen",
+    helpTitle: "Befehlsreferenz",
+    helpClickToUse: "Zum Verwenden klicken",
+    helpDefault: "Standardabfrage (A)",
+    helpMX: "Mailserver (MX)",
+    helpNS: "Namenserver (NS)",
+    helpSOA: "Start of Authority (SOA)",
+    helpTXT: "Textdatensätze (TXT)",
+    helpReverse: "Rückwärtssuche (PTR)",
+    helpDebug: "Debug-Modus"
   },
   pl: {
     appTitle: "Symulator Bind9",
@@ -185,7 +221,16 @@ export const TRANSLATIONS = {
     nslookupPlaceholder: "Argumenty (np. example.com lub -type=MX example.com)",
     runCommand: "Uruchom",
     commandOutput: "Wyjście terminala",
-    close: "Zamknij"
+    close: "Zamknij",
+    helpTitle: "Referencje poleceń",
+    helpClickToUse: "Kliknij, aby użyć",
+    helpDefault: "Standardowe zapytanie (A)",
+    helpMX: "Serwery pocztowe (MX)",
+    helpNS: "Serwery nazw (NS)",
+    helpSOA: "Start of Authority (SOA)",
+    helpTXT: "Rekordy tekstowe (TXT)",
+    helpReverse: "Wyszukiwanie odwrotne (PTR)",
+    helpDebug: "Tryb debugowania"
   },
   fr: {
     appTitle: "Simulateur Bind9",
@@ -220,7 +265,16 @@ export const TRANSLATIONS = {
     nslookupPlaceholder: "Arguments (ex: example.com ou -type=MX example.com)",
     runCommand: "Exécuter",
     commandOutput: "Sortie Terminal",
-    close: "Fermer"
+    close: "Fermer",
+    helpTitle: "Référence des commandes",
+    helpClickToUse: "Cliquez pour utiliser",
+    helpDefault: "Recherche standard (A)",
+    helpMX: "Serveurs de messagerie (MX)",
+    helpNS: "Serveurs de noms (NS)",
+    helpSOA: "Début d'autorité (SOA)",
+    helpTXT: "Enregistrements texte (TXT)",
+    helpReverse: "Recherche inversée (PTR)",
+    helpDebug: "Mode débogage"
   },
   ua: {
     appTitle: "Bind9 Simulator",
@@ -255,7 +309,16 @@ export const TRANSLATIONS = {
     nslookupPlaceholder: "Аргументи (напр. example.com або -type=MX example.com)",
     runCommand: "Виконати",
     commandOutput: "Вивід терміналу",
-    close: "Закрити"
+    close: "Закрити",
+    helpTitle: "Довідка по командам",
+    helpClickToUse: "Натисніть, щоб використати",
+    helpDefault: "Стандартний запит (A)",
+    helpMX: "Поштові шлюзи (MX)",
+    helpNS: "DNS сервери (NS)",
+    helpSOA: "Початковий запис зони (SOA)",
+    helpTXT: "Текстові записи (TXT)",
+    helpReverse: "Зворотний пошук (PTR)",
+    helpDebug: "Режим налагодження"
   },
   ja: {
     appTitle: "Bind9 シミュレーター",
@@ -290,6 +353,15 @@ export const TRANSLATIONS = {
     nslookupPlaceholder: "引数 (例: example.com または -type=MX example.com)",
     runCommand: "実行",
     commandOutput: "ターミナル出力",
-    close: "閉じる"
+    close: "閉じる",
+    helpTitle: "コマンドリファレンス",
+    helpClickToUse: "クリックして使用",
+    helpDefault: "標準ルックアップ (A)",
+    helpMX: "メールサーバー (MX)",
+    helpNS: "ネームサーバー (NS)",
+    helpSOA: "権限の開始 (SOA)",
+    helpTXT: "テキストレコード (TXT)",
+    helpReverse: "逆引き (PTR)",
+    helpDebug: "デバッグモード"
   }
 };

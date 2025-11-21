@@ -11,6 +11,22 @@ interface NslookupModalProps {
   language: Language;
 }
 
+interface HelpItem {
+  key: string;
+  cmd: string;
+  descKey: keyof typeof TRANSLATIONS['en'];
+}
+
+const HELP_EXAMPLES: HelpItem[] = [
+  { key: 'a', cmd: 'example.com', descKey: 'helpDefault' },
+  { key: 'mx', cmd: '-type=MX example.com', descKey: 'helpMX' },
+  { key: 'ns', cmd: '-type=NS example.com', descKey: 'helpNS' },
+  { key: 'soa', cmd: '-type=SOA example.com', descKey: 'helpSOA' },
+  { key: 'txt', cmd: '-type=TXT example.com', descKey: 'helpTXT' },
+  { key: 'ptr', cmd: '192.168.1.10', descKey: 'helpReverse' },
+  { key: 'debug', cmd: '-debug example.com', descKey: 'helpDebug' },
+];
+
 export const NslookupModal: React.FC<NslookupModalProps> = ({ 
   isOpen, 
   onClose, 
@@ -40,7 +56,7 @@ export const NslookupModal: React.FC<NslookupModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-      <div className="bg-slate-900 border border-slate-700 rounded-lg shadow-2xl w-full max-w-2xl flex flex-col max-h-[80vh]">
+      <div className="bg-slate-900 border border-slate-700 rounded-lg shadow-2xl w-full max-w-5xl flex flex-col h-[85vh] md:h-[70vh]">
         
         {/* Header */}
         <div className="flex justify-between items-center p-4 border-b border-slate-800">
@@ -55,45 +71,77 @@ export const NslookupModal: React.FC<NslookupModalProps> = ({
           </button>
         </div>
 
-        {/* Body */}
-        <div className="p-6 flex-1 overflow-hidden flex flex-col gap-4">
+        {/* Body Grid */}
+        <div className="flex-1 overflow-hidden flex flex-col md:flex-row">
           
-          <form onSubmit={handleSubmit} className="flex gap-2">
-            <div className="flex-1 relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <span className="text-slate-500 font-mono font-bold">{'>'} nslookup</span>
+          {/* Left Column: Terminal & Input */}
+          <div className="flex-1 p-6 flex flex-col gap-4 min-w-0">
+             <form onSubmit={handleSubmit} className="flex gap-2">
+              <div className="flex-1 relative group">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span className="text-slate-500 font-mono font-bold transition-colors group-focus-within:text-indigo-500">{'>'} nslookup</span>
+                </div>
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={args}
+                  onChange={(e) => setArgs(e.target.value)}
+                  placeholder={t.nslookupPlaceholder}
+                  className="w-full bg-slate-950 border border-slate-700 rounded-md py-2.5 pl-28 pr-4 text-slate-200 font-mono text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all"
+                />
               </div>
-              <input
-                ref={inputRef}
-                type="text"
-                value={args}
-                onChange={(e) => setArgs(e.target.value)}
-                placeholder={t.nslookupPlaceholder}
-                className="w-full bg-slate-950 border border-slate-700 rounded-md py-2 pl-28 pr-4 text-slate-200 font-mono text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none"
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={isLoading || !args.trim()}
-              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 whitespace-nowrap"
-            >
-              {isLoading ? (
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-              ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 10 4 15 9 20"></polyline><path d="M20 4v7a4 4 0 0 1-4 4H4"></path></svg>
-              )}
-              {t.runCommand}
-            </button>
-          </form>
+              <button
+                type="submit"
+                disabled={isLoading || !args.trim()}
+                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 whitespace-nowrap shadow-lg shadow-indigo-900/20"
+              >
+                {isLoading ? (
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 10 4 15 9 20"></polyline><path d="M20 4v7a4 4 0 0 1-4 4H4"></path></svg>
+                )}
+                {t.runCommand}
+              </button>
+            </form>
 
-          <div className="flex-1 bg-black rounded-md border border-slate-800 p-4 overflow-auto min-h-[200px]">
-            <div className="text-xs text-slate-500 uppercase mb-2 font-semibold tracking-wider border-b border-slate-800 pb-1">
-              {t.commandOutput}
+            <div className="flex-1 bg-black rounded-md border border-slate-800 p-4 overflow-auto relative">
+              <div className="text-[10px] text-slate-600 uppercase mb-2 font-semibold tracking-wider border-b border-slate-900 pb-1 sticky top-0 bg-black">
+                {t.commandOutput}
+              </div>
+              <pre className="font-mono text-sm text-green-400 whitespace-pre-wrap">
+                {result || <span className="text-slate-700 opacity-50 cursor-blink">_</span>}
+              </pre>
             </div>
-            <pre className="font-mono text-sm text-green-400 whitespace-pre-wrap">
-              {result || <span className="text-slate-600 opacity-50 cursor-blink">_</span>}
-            </pre>
           </div>
+
+          {/* Right Column: Help & Examples */}
+          <div className="w-full md:w-72 bg-slate-900/50 border-t md:border-t-0 md:border-l border-slate-800 flex flex-col">
+            <div className="p-4 border-b border-slate-800 bg-slate-900/80">
+              <h3 className="text-xs uppercase text-slate-500 font-bold tracking-wider">{t.helpTitle}</h3>
+              <p className="text-[10px] text-slate-600 mt-1">{t.helpClickToUse}</p>
+            </div>
+            
+            <div className="overflow-y-auto p-2 space-y-1 flex-1">
+              {HELP_EXAMPLES.map((item) => (
+                <button
+                  key={item.key}
+                  onClick={() => {
+                    setArgs(item.cmd);
+                    inputRef.current?.focus();
+                  }}
+                  className="w-full text-left group p-3 rounded-md hover:bg-slate-800 border border-transparent hover:border-slate-700 transition-all duration-200"
+                >
+                  <div className="text-xs text-slate-400 group-hover:text-indigo-300 font-medium mb-1.5">
+                    {t[item.descKey as keyof typeof t]}
+                  </div>
+                  <div className="bg-black/40 px-2 py-1.5 rounded border border-slate-800 group-hover:border-indigo-500/30 font-mono text-xs text-green-500/90 group-hover:text-green-400 truncate">
+                    {item.cmd}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
         </div>
 
         {/* Footer */}
